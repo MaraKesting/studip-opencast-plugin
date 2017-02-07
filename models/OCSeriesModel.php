@@ -273,11 +273,11 @@ class OCSeriesModel {
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $date = getdate( $res[0]['start_time'] );
         if ($date['mon'] <= 3)
-            $sem = 'WS' . substr(($date['year']-1), 2, 2) . '-' . $date['year'];
+            $sem = ' - WiSe' . substr(($date['year']-1), 2, 2) . '/' . substr(($date['year']), 2, 2);
         else if ($date['mon'] >= 10)
-            $sem = 'WS' . substr(($date['year']), 2, 2) . '-' . ($date['year']+1);
+            $sem = ' - WiSe' . substr(($date['year']), 2, 2) . '/' . substr(($date['year']+1), 2, 2);
         else
-            $sem = 'SS' . $date['year'];
+            $sem = ' - SoSe' . $date['year'];
         // Patch "Semester anhängen: Ende       
         
 
