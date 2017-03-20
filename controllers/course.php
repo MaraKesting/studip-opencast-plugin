@@ -18,8 +18,8 @@ require_once $this->trails_root.'/classes/OCRestClient/SchedulerClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/UploadClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/IngestClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/WorkflowClient.php';
+require_once $this->trails_root.'/classes/OCRestClient/MediaPackageClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/SecurityClient.php';
-require_once $this->trails_root.'/classes/OCRestClient/ArchiveClient.php';
 require_once $this->trails_root.'/models/OCModel.php';
 require_once $this->trails_root.'/models/OCCourseModel.class.php';
 
@@ -162,7 +162,6 @@ class CourseController extends StudipController
                             }
                         }
                         // check whether server supports ssl
-                        /*
                         $embed_headers = @get_headers("https://". $this->embed);
                         if($embed_headers) {
                             $this->embed = "https://". $this->embed;
@@ -171,7 +170,6 @@ class CourseController extends StudipController
                             //$this->embed = "https://". $this->embed;
                             $this->embed = "http://". $this->embed;
                         }
-                        */
                         $this->engage_player_url = $this->search_client->getBaseURL() ."/engage/ui/watch.html?id=".$this->active_id;
                     }
 
@@ -183,6 +181,7 @@ class CourseController extends StudipController
                     //check needed services before showing upload form
                     UploadClient::getInstance()->checkService();
                     IngestClient::getInstance()->checkService();
+                    MediaPackageClient::getInstance()->checkService();
                     SeriesClient::getInstance()->checkService();
 
 
@@ -190,11 +189,6 @@ class CourseController extends StudipController
                     // Remove Series
                     if($this->flash['cand_delete']) {
                         $this->flash['delete'] = true;
-                    }
-
-                    //Remove Episode
-                    if($this->flash['cand_delete_episode']) {
-                        $this->flash['delete_episode'] = true;
                     }
                 } else {
 
@@ -266,33 +260,6 @@ class CourseController extends StudipController
         $this->redirect(PluginEngine::getLink('opencast/course/index'));
     }
 
-    function remove_episode_action($ticket) {
-        $delete = Request::get('delete');
-        $cancel = Request::get('cancel');
-        $episodeId = Request::get('episode_id');
-
-        if($cancel === '1') {
-            $this->flash['cand_delete_episode'] = false;
-            $this->redirect(PluginEngine::getLink('opencast/course/index'));
-            return;
-        }
-
-        if($delete && check_ticket($ticket)) {
-            /** @var ArchiveClient $archiveClient */
-            $archiveClient = ArchiveClient::getInstance();
-
-            if($archiveClient->applyWorkflow('ng-retract', $episodeId)) {
-                $this->flash['messages'] = array('success'=> _("Die Episode wurde erfolgreich gelöscht.<br>Der Vorgang kann einige Minuten dauern. Bitte aktualisierern Sie in wenigen Minuten die Episodenliste."));
-            } else {
-                $this->flash['messages']['error'] = _("Löschen der Episode fehlgeschlagen!");
-            }
-
-        } else {
-            $this->flash['cand_delete_episode'] = true;
-        }
-
-        $this->redirect(PluginEngine::getLink('opencast/course/index/'.$episodeId));
-    }
 
     function scheduler_action()
     {
@@ -592,21 +559,13 @@ class CourseController extends StudipController
             $this->set_status('200');
             $active_id = $episode_id;
             $this->search_client = SearchClient::getInstance();
-            $this->security_client = SecurityClient::getInstance();
 
             if($this->theodul) {
                 $embed =  $this->search_client->getBaseURL() ."/engage/theodul/ui/core.html?id=".$active_id . "&mode=embed";
-                if(get_config("OPENCAST_STREAM_SECURITY")) {
-                    $embed = $this->security_client->signURL($embed);
-                }
             } else {
                 $embed =  $this->search_client->getBaseURL() ."/engage/ui/embed.html?id=".$active_id;
-                if(get_config("OPENCAST_STREAM_SECURITY")) {
-                    $embed = $this->security_client->signURL($embed);
-                }
             }
             // check whether server supports ssl
-            /*
             $embed_headers = @get_headers("https://". $embed);
             if($embed_headers) {
                 $embed = "https://". $embed;
@@ -615,7 +574,6 @@ class CourseController extends StudipController
                 $embed = "http://". $embed;
                 //$embed = "https://". $embed;
             }
-            */
             $perm = $GLOBALS['perm']->have_studip_perm('dozent', $course_id);
 
 

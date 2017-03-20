@@ -265,32 +265,31 @@ class OCSeriesModel {
      * @param string $course_id
      * @return string xml - the xml representation of the string  
      */
-    static function createSeriesDC($course_id)
+    static function createSeriesDC($course_id) 
     {
-        // Patch "Semester anhï¿½ngen": Hier wird das Semester zu der Veranstaltung ermittelt
+        // Patch "Semester anhängen": Hier wird das Semester zu der Veranstaltung ermittelt
         $stmt = DBManager::get()->prepare("SELECT start_time FROM seminare WHERE `Seminar_id` = ?");
         $stmt->execute(array($course_id));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $date = getdate( $res[0]['start_time'] );
         if ($date['mon'] <= 3)
-            $sem = 'WS' . substr(($date['year']-1), 2, 2) . '-' . $date['year'];
+            $sem = ' - WiSe' . substr(($date['year']-1), 2, 2) . '/' . substr(($date['year']), 2, 2);
         else if ($date['mon'] >= 10)
-            $sem = 'WS' . substr(($date['year']), 2, 2) . '-' . ($date['year']+1);
+            $sem = ' - WiSe' . substr(($date['year']), 2, 2) . '/' . substr(($date['year']+1), 2, 2);
         else
-            $sem = 'SS' . $date['year'];
-        // Patch "Semester anhï¿½ngen: Ende
-
-        global $STUDIP_BASE_PATH;
+            $sem = ' - SoSe' . $date['year'];
+        // Patch "Semester anhängen: Ende       
+        
 
         if (version_compare($GLOBALS['SOFTWARE_VERSION'], "3.3", '<=')) {
-            require_once $STUDIP_BASE_PATH.'/lib/classes/Institute.class.php';
+            require_once 'lib/classes/Institute.class.php';
         } else {
-            require_once $STUDIP_BASE_PATH.'/lib/models/Institute.class.php';
+            require_once 'lib/models/Institute.class.php';
         }
 
         $course = new Seminar($course_id);
         $name = $course->getName();
-        $license = "ï¿½ " . gmdate(Y) . " " . $GLOBALS['UNI_NAME_CLEAN'];
+        $license = "© " . gmdate(Y) . " " . $GLOBALS['UNI_NAME_CLEAN'];
         $rightsHolder = $GLOBALS['UNI_NAME_CLEAN'];
 
         $inst = Institute::find($course->institut_id);
@@ -306,10 +305,10 @@ class OCSeriesModel {
         $language = 'de';
 
         $data = array(
-        // Patch "Semester anhï¿½ngen": Hier wird das Semester an den Namen der Serie gehï¿½ngt
+        // Patch "Semester anhängen": Hier wird das Semester an den Namen der Serie gehängt
             'title' => $name." ".$sem,
         //  'title' => $name,
-        // Patch "Semester anhï¿½ngen: Ende
+        // Patch "Semester anhängen: Ende
             'creator' => $creator,
             'contributor' => $contributor,
             'subject' => $course->form,
