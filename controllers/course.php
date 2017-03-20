@@ -366,16 +366,30 @@ class CourseController extends StudipController
     {
         if($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)){
             $this->series_client = SeriesClient::getInstance();
-            if($this->series_client->createSeriesForSeminar($this->course_id)) {
+            $resultCreateSeriesForSeminar = $this->series_client->createSeriesForSeminar($this->course_id);
+            if($resultCreateSeriesForSeminar == "new_series_created") {
                 $this->flash['messages']['success'] = _("Series wurde angelegt");
                 log_event('OC_CREATE_SERIES', $this->course_id);
                 
             } else {
-                throw new Exception(_("Verbindung zum Series-Service konnte nicht hergestellt werden."));
+                if ($resultCreateSeriesForSeminar == "no_connection_to_series_service"){              
+					throw new Exception(_("Verbindung zum Series-Service konnte nicht hergestellt werden."));
+				} else {
+					if ($resultCreateSeriesForSeminar == "series_exists"){
+						$this->flash['messages'] = array('error'=> _("Serie existiert bereits. Bitte unter Aktionen \"Vorhandene Series verknüpfen\" wählen."));
+					} else {
+						throw new Exception(_("Der Status der Serie ist undefiniert. Bitte Service informieren."));
+					}
+				}
+
             }
         } else {
            throw new Exception(_("Sie haben leider keine Berechtigungen um diese Aktion durchzuführen"));
         }
+        
+        session_start();
+        $_SESSION['resultCreateSeriesForSeminar'] = $resultCreateSeriesForSeminar;
+        
         $this->redirect(PluginEngine::getLink('opencast/course/index'));
     }
 
