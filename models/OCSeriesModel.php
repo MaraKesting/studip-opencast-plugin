@@ -82,13 +82,17 @@ class OCSeriesModel {
 			$res = $stmt->execute(array($_SESSION['auth']->auth['uname']));
 			$output = $stmt->fetch(PDO::FETCH_ASSOC);
 			$name = utf8_encode($output['Vorname']) . " " . utf8_encode($output['Nachname']); */
-       
-            foreach ($all as $val => $key) {
-                if (stristr($key['creator'], $_SESSION['auth']->auth['uname'])==false){
-                    unset($all[$val]);
+
+			global $perm;
+
+			if(!$perm->have_perm('root')) {
+                foreach ($all as $val => $key) {
+                    if (stristr($key['creator'], $_SESSION['auth']->auth['uname']) == false) {
+                        unset($all[$val]);
+                    }
                 }
             }
-            
+
             if (empty($connected)) {
                 self::$unconnectedSeries = $all;
             } elseif (empty($all)) {
@@ -276,9 +280,9 @@ class OCSeriesModel {
      * @param string $course_id
      * @return string xml - the xml representation of the string  
      */
-    static function createSeriesDC($course_id) 
+    static function createSeriesDC($course_id)
     {
-        // Patch "Semester anhängen": Hier wird das Semester zu der Veranstaltung ermittelt
+        // Patch "Semester anhï¿½ngen": Hier wird das Semester zu der Veranstaltung ermittelt
         $stmt = DBManager::get()->prepare("SELECT start_time FROM seminare WHERE `Seminar_id` = ?");
         $stmt->execute(array($course_id));
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -289,18 +293,19 @@ class OCSeriesModel {
             $sem = ' - WiSe' . substr(($date['year']), 2, 2) . '/' . substr(($date['year']+1), 2, 2);
         else
             $sem = ' - SoSe' . $date['year'];
-        // Patch "Semester anhängen: Ende       
-        
+        // Patch "Semester anhï¿½ngen: Ende
+
+        global $STUDIP_BASE_PATH;
 
         if (version_compare($GLOBALS['SOFTWARE_VERSION'], "3.3", '<=')) {
-            require_once 'lib/classes/Institute.class.php';
+            require_once $STUDIP_BASE_PATH.'/lib/classes/Institute.class.php';
         } else {
-            require_once 'lib/models/Institute.class.php';
+            require_once $STUDIP_BASE_PATH.'/lib/models/Institute.class.php';
         }
 
         $course = new Seminar($course_id);
         $name = $course->getName();
-        $license = "© " . gmdate(Y) . " " . $GLOBALS['UNI_NAME_CLEAN'];
+        $license = "ï¿½ " . gmdate(Y) . " " . $GLOBALS['UNI_NAME_CLEAN'];
         $rightsHolder = $GLOBALS['UNI_NAME_CLEAN'];
 
         $inst = Institute::find($course->institut_id);
@@ -320,10 +325,10 @@ class OCSeriesModel {
         $language = 'de';
 
         $data = array(
-        // Patch "Semester anhängen": Hier wird das Semester an den Namen der Serie gehängt
+        // Patch "Semester anhï¿½ngen": Hier wird das Semester an den Namen der Serie gehï¿½ngt
             'title' => $name." ".$sem,
         //  'title' => $name,
-        // Patch "Semester anhängen: Ende
+        // Patch "Semester anhï¿½ngen: Ende
             'creator' => $creator,
             'contributor' => $contributor,
             'subject' => $course->form,
