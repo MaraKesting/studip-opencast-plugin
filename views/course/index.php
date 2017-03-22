@@ -85,6 +85,7 @@
             <div></div>
         </div>
         <div class="oce_playercontainer">
+            <!--
             <span id="oc_active_episode" class="hidden" data-activeepisode="<?=$active['id']?>">
             </span>
             <? if($theodul) : ?>
@@ -143,6 +144,7 @@
                         <? endif;?>
                     </div>
             </div>
+        -->
         </div>
     </div>
     <div id="episodes" class="oc_flexitem oc_flexepisodelist">
