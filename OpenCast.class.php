@@ -26,7 +26,7 @@ NotificationCenter::addObserver('OpenCast', 'getAPIDataForCourseRecordings', 're
 NotificationCenter::addObserver('OpenCast', 'getAPIDataForCourseRecordings', 'restip.courses-semester-semester_id.get');
 
 
-class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin
+class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, HomepagePlugin
 {
     /**
      * Initialize a new instance of the plugin.
@@ -68,6 +68,20 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin
             }
         }
 
+        # Anzeige aller persönlichen (zugeordneten) Aufzeichungen:
+        $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
+        $ocProfileNav->setImage(
+				$this->getPluginUrl() . '/images/oc-logo-white.png');
+        $ocProfileNav->setActiveImage(
+				$this->getPluginUrl() . '/images/oc-logo-black.png');
+        $show_navigation = 
+				new AutoNavigation(
+#					$this->getPluginName(), 
+					'Übersicht', 
+				PluginEngine::getURL('opencast/profile/list')
+		  );	
+        $ocProfileNav->addSubNavigation('list', $show_navigation);
+        Navigation::addItem('/profile/OC', $ocProfileNav);
 
         PageLayout::addStylesheet($this->getpluginUrl() . '/stylesheets/oc.css');
         PageLayout::addScript($this->getPluginUrl() . '/javascripts/application.js');
@@ -90,6 +104,31 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin
 
         NotificationCenter::addObserver($this, "NotifyUserOnNewEpisode", "NewEpisodeForCourse");
 
+    }
+    
+    /** 
+     * Diese Methode ist notwendig, um den Reiter "Meine Vorlesungsvideos" 
+     * im Profil anzeigen zu lassen.
+     * 
+     * Ursprüngliche Doku:
+     * 
+     * Return a template (an instance of the Flexi_Template class)
+     * to be rendered on the given user's home page. Return NULL to
+     * render nothing for this plugin.
+     *
+     * The template will automatically get a standard layout, which
+     * can be configured via attributes set on the template:
+     *
+     *  title        title to display, defaults to plugin name
+     *  icon_url     icon for this plugin (if any)
+     *  admin_url    admin link for this plugin (if any)
+     *  admin_title  title for admin link (default: Administration)
+     *
+     * @return object   template object to render or NULL
+     */
+    function getHomepageTemplate($user_id)
+    {
+        return null;
     }
 
     /**
