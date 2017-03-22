@@ -18,7 +18,6 @@ require_once $this->trails_root.'/classes/OCRestClient/SchedulerClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/UploadClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/IngestClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/WorkflowClient.php';
-require_once $this->trails_root.'/classes/OCRestClient/MediaPackageClient.php';
 require_once $this->trails_root.'/classes/OCRestClient/SecurityClient.php';
 require_once $this->trails_root.'/models/OCModel.php';
 require_once $this->trails_root.'/models/OCCourseModel.class.php';
@@ -182,7 +181,6 @@ class CourseController extends StudipController
                     //check needed services before showing upload form
                     UploadClient::getInstance()->checkService();
                     IngestClient::getInstance()->checkService();
-                    MediaPackageClient::getInstance()->checkService();
                     SeriesClient::getInstance()->checkService();
 
 
@@ -581,6 +579,7 @@ class CourseController extends StudipController
                 $embed =  $this->search_client->getBaseURL() ."/engage/ui/embed.html?id=".$active_id;
             }
             // check whether server supports ssl
+            /*
             $embed_headers = @get_headers("https://". $embed);
             if($embed_headers) {
                 $embed = "https://". $embed;
@@ -589,6 +588,7 @@ class CourseController extends StudipController
                 $embed = "http://". $embed;
                 //$embed = "https://". $embed;
             }
+            */
             $perm = $GLOBALS['perm']->have_studip_perm('dozent', $course_id);
 
 
