@@ -78,6 +78,17 @@ class OCSeriesModel {
             $connected = self::getConnectedSeries($courseID);
             $all = self::getAllSeries();
 
+			/*$stmt = DBManager::get()->prepare("SELECT Vorname,Nachname FROM `auth_user_md5` WHERE username = ?");
+			$res = $stmt->execute(array($_SESSION['auth']->auth['uname']));
+			$output = $stmt->fetch(PDO::FETCH_ASSOC);
+			$name = utf8_encode($output['Vorname']) . " " . utf8_encode($output['Nachname']); */
+
+            foreach ($all as $val => $key) {
+                if (stristr($key['creator'], $_SESSION['auth']->auth['uname'])==false){
+                    unset($all[$val]);
+                }
+            }
+
             if (empty($connected)) {
                 self::$unconnectedSeries = $all;
             } elseif (empty($all)) {
@@ -302,7 +313,11 @@ class OCSeriesModel {
         $instructors = $course->getMembers('dozent');
         $instructor = array_shift($instructors);
         $contributor = $GLOBALS['UNI_NAME_CLEAN'];
-        $creator = $instructor['fullname'];
+        //$creator = $instructor['fullname'];
+        $creator = $_SESSION['auth']->auth['uname'];
+        if ($creator!=$instructor['username']){
+			$creator = $creator. "," .$instructor['username'];
+		}
         $language = 'de';
 
         $data = array(
