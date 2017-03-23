@@ -123,8 +123,8 @@
             
             // Alle Serien aus der Opencast lesen
             $DBSeries = OCSeriesModel::getAllSeries();
-			// Namen der Veranstaltung aus der Stud.IP-Datenbank lesen 
-			$stmt = DBManager::get()->prepare("SELECT Name FROM `seminare` WHERE Seminar_id = ?");
+            // Namen der Veranstaltung aus der Stud.IP-Datenbank lesen 
+            $stmt = DBManager::get()->prepare("SELECT Name FROM `seminare` WHERE Seminar_id = ?");
             $res = $stmt->execute(array($course_id));
             $output = $stmt->fetch(PDO::FETCH_ASSOC);
             $name = utf8_encode($output['Name']);
@@ -132,63 +132,57 @@
             // Prüfen, ob der Name der Veranstaltung in Opencast vorhanden ist
             $series_exists_boolean = false;
             foreach ($DBSeries as $key=>$value) {
-				$series_exists_boolean = (($DBSeries[$key]['title']!="" && $name!="" ? strpos($DBSeries[$key]['title'], $name)===0 : false) || $series_exists_boolean);
-			}
-			unset($value);  
+                $series_exists_boolean = (($DBSeries[$key]['title']!="" && $name!="" ? strpos($DBSeries[$key]['title'], $name)===0 : false) || $series_exists_boolean);
+            }
+            unset($value);  
          
             /* $conf = OCRestClient::getConfig('apisecurity');
-			$sc = new OCRestClient ( $conf['service_host'], $conf['service_user'], $conf['service_password']);
+            $sc = new OCRestClient ( $conf['service_host'], $conf['service_user'], $conf['service_password']);
             $service_url = "/api/series/?filter=title:".rawurlencode($name);
-            echo $service_url; echo "<br>";
-			$json_array = $sc->getJSON($service_url);
-			$series_exists_boolean = (empty($json_array) == false ? true : false);
-			//echo $series_exists_boolean;
-			//echo '<pre>'.print_r($json_array,1).'</pre>'; */
+            $json_array = $sc->getJSON($service_url);
+            $series_exists_boolean = (empty($json_array) == false ? true : false); */
 			
-			$series_exists_status = "status_unknown";
+            $series_exists_status = "status_unknown";
             
             if (!$series_exists_boolean) {
-					            
-	            $dublinCore = utf8_encode(OCSeriesModel::createSeriesDC($course_id));
+			            
+                $dublinCore = utf8_encode(OCSeriesModel::createSeriesDC($course_id));
 	            
 	            
-	            $ACLData = array('ROLE_ADMIN' => array(
-	                                                'read' => 'true',
-	                                                'write' => 'true',
-	                                                'analyze' => 'true'),
-	                               'ROLE_ANONYMOUS' => array(
-	                                                'read' => 'true'
-	                               )
-	                        );
+                $ACLData = array('ROLE_ADMIN' => array(
+	                                            'read' => 'true',
+	                                            'write' => 'true',
+                                                'analyze' => 'true'),
+	                                  'ROLE_ANONYMOUS' => array(
+	                                            'read' => 'true')
+	            );
 	                        
-	            $ACL = OCSeriesModel::createSeriesACL($ACLData); 
-	            $post = array('series' => $dublinCore,
-	                        'acl' => $ACL);
-	
-	            $res = $this->getXML('/', $post, false, true);
-	    
-	            $string = str_replace('dcterms:', '', $res[0]);
-	            $xml = simplexml_load_string($string);
-	            $json = json_decode(json_encode($xml), true);
-	
-	            if ($res[1] == 201){
-	
-	                $new_series = json_decode($res[0]);
-	                $series_id = $json['identifier'];
-	                OCSeriesModel::setSeriesforCourse($course_id, $series_id, 'visible', 1, time());
-	                
-	                self::updateAccescontrolForSeminar($series_id, $ACL);
-					
-					return "new_series_created";
-	            } else {
-	                return "no_connection_to_series_service";
-	            }     
-            } else {
- 				return "series_exists";
-			}
-			          
+                $ACL = OCSeriesModel::createSeriesACL($ACLData);
+                $post = array('series' => $dublinCore,'acl' => $ACL);
+                $res = $this->getXML('/', $post, false, true);
+                $string = str_replace('dcterms:', '', $res[0]);
+                $xml = simplexml_load_string($string);
+                $json = json_decode(json_encode($xml), true);
+                
+                if ($res[1] == 201){
+
+                    $new_series = json_decode($res[0]);
+                    $series_id = $json['identifier'];
+                    OCSeriesModel::setSeriesforCourse($course_id, $series_id, 'visible', 1, time());
+                    self::updateAccescontrolForSeminar($series_id, $ACL);
+		
+                    return "new_series_created";
+	        } else {
+                    return "no_connection_to_series_service";
+                }  
+           } else {
+                return "series_exists";
+           }
+
+           // Das Ergebnis ist "new_series_created", "series_exists" oder "no_connection_to_series_service"
+		          
         }
-        // Das Ergebnis ist "new_series_created", "series_exists" oder "no_connection_to_series_service"
+
         
         /**
          * updateAccescontrolForSeminar - updates the ACL for a given series in OC Matterhorn
