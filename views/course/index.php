@@ -207,9 +207,9 @@
 <? else: ?>
     <? if(empty($this->connectedSeries) && $GLOBALS['perm']->have_studip_perm('dozent', $course_id)) :?>
             <? if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists") :?>
-            <? //if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists"&&$_SESSION['resultCreateSeriesForSeminar'] != "new_series_created") :?>
-				<?= MessageBox::info(_("Sie haben noch keine Series aus Opencast mit dieser Veranstaltung verknüpft. Bitte erstellen Sie eine neue Series oder verknüpfen eine bereits vorhandene Series.")) ?>
-			<? endif; ?>
+                <? //if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists"&&$_SESSION['resultCreateSeriesForSeminar'] != "new_series_created") :?>
+                <?= MessageBox::info(_("Sie haben noch keine Series aus Opencast mit dieser Veranstaltung verknüpft. Bitte erstellen Sie eine neue Series oder verknüpfen eine bereits vorhandene Series.")) ?>
+            <? endif; ?>
     <? else: ?>
         <?=MessageBox::info(_('Es wurden bislang keine Vorlesungsaufzeichnungen bereitgestellt.'));?>
     <? endif;?>

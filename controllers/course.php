@@ -372,21 +372,19 @@ class CourseController extends StudipController
                 log_event('OC_CREATE_SERIES', $this->course_id);
                 
             } else {
-                if ($resultCreateSeriesForSeminar == "no_connection_to_series_service"){              
-					throw new Exception(_("Verbindung zum Series-Service konnte nicht hergestellt werden."));
-				} else {
-					if ($resultCreateSeriesForSeminar == "series_exists"){
-						$this->flash['messages'] = array('error'=> _("Serie existiert bereits. Bitte unter Aktionen \"Vorhandene Series verknüpfen\" wählen."));
-					} else {
-						throw new Exception(_("Der Status der Serie ist undefiniert. Bitte Service informieren."));
-					}
-				}
-
+                if ($resultCreateSeriesForSeminar == "no_connection_to_series_service"){
+                    throw new Exception(_("Verbindung zum Series-Service konnte nicht hergestellt werden."));
+                } else {
+                    if ($resultCreateSeriesForSeminar == "series_exists"){
+                        $this->flash['messages'] = array('error'=> _("Serie existiert bereits. Bitte unter Aktionen \"Vorhandene Series verknüpfen\" wählen."));
+                    } else {
+                        throw new Exception(_("Der Status der Serie ist undefiniert. Bitte Service informieren."));
+                    }
+                }
             }
         } else {
-           throw new Exception(_("Sie haben leider keine Berechtigungen um diese Aktion durchzuführen"));
+            throw new Exception(_("Sie haben leider keine Berechtigungen um diese Aktion durchzuführen"));
         }
-        
         session_start();
         $_SESSION['resultCreateSeriesForSeminar'] = $resultCreateSeriesForSeminar;
         
