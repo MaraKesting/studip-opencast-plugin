@@ -30,6 +30,8 @@ class ProfileController extends AuthenticatedController
 #		$klass = substr(get_called_class(), 0, -10);
 #		$name = sprintf('oc_admin.performed.%s_%s', $klass, $action);
 #		NotificationCenter::postNotification($name, $this);
+
+		PageLayout::setTitle(_('Videoverwaltung'));
 	}
 	
 	
@@ -56,7 +58,7 @@ class ProfileController extends AuthenticatedController
 			'/api/events/?sign=false&withacl=false&withmetadata=true'.
 				'&withpublications=true'.
 				'&filter=presenters:'.$_SESSION['auth']->auth['uname'].
-				'&sort=&limit=0&offset=0');
+				'&sort=date:DESC&limit=0&offset=0');
 		
 		# JSON-Array durchgehen und Video-Daten in Extra-Array speichern:
 		$this->videos = array();
