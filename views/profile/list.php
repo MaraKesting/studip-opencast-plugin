@@ -1,3 +1,14 @@
+<style type="text/css">
+	.seriesSeminarsTbl td:hover {
+		background-color: #eee;
+		cursor: pointer;
+	}
+	.seriesSeminarsTbl td a, seriesSeminarsTbl td a:hover {
+		color: #000;
+	}
+</style>
+
+
 <div id="container">
 	
 	<div class="status_circle" style="background-color: #ff0000"></div>
@@ -12,8 +23,11 @@
 	<br/>
 	<ul>
 		<li>
+			Ihre neuesten Videos finden Sie immer ganz oben
+		</li>
+		<li>
 			Sie k&ouml;nnen den Verarbeitungs-Status auch einsehen, indem Sie mit der Maus
-			&uuml;ber den entsprechenden Kreis in der Tabelle unten unter <b>Status</b> fahren.
+			&uuml;ber den entsprechenden Kreis in der Tabelle unten unter <b>Status</b> fahren
 		</li>
 		<li>
 			Zur Einsicht aller <b>Meta-Daten eines Videos</b> klicken Sie auf die entsprechende Zeile. <br/>
@@ -32,7 +46,6 @@
 				<th style=""></th>
 				<th style="">Aufzeichungsdatum</th>
 				<th colspan="3" style="text-align: center;"><!--Optionen--></th>
-
 			</tr>
 		</thead>
 		<tbody>
@@ -40,7 +53,6 @@
 			$even = false;
 			foreach ($this->videos as $video)
 			{
-				
 				switch($video['processing_state']) {
 					case "SUCCEEDED":
 						$webm_color = '#00ff00';
@@ -91,7 +103,7 @@
 					<!-- Link zur Veranstaltung -->
 					<td>
 						<?php
-							if ( count($video['series_data']['seminars']) > 0)
+							if ( count($video['series_data']['seminars']) == 1) {
 								echo 
 									'<a href="'.
 										URLHelper::getScriptLink(
@@ -99,14 +111,81 @@
 											array('cid' => $video['series_data']['seminars'][0]['Seminar_id'])
 										).
 										'" '.
-											'title="Zur Veranstaltung" target="_blank">'.
+											'title="Zur Veranstaltung" target="_blank" '.
+										'>'.
 										Assets::img('icons/16/blue/seminar.png').
 									'</a>';
+							}
+							else if ( count($video['series_data']['seminars']) > 1) {
+								echo 
+									'<span '.
+											'style="cursor: pointer;" '.
+											'title="Veranstaltungen anzeigen" '.
+											'onClick="showSeminarsForSeries(\''.
+												$video['identifier'].
+											'\')">'.
+										Assets::img('icons/16/blue/seminar.png').
+									'</span>';
+								
+								# Wenn die angegebene Serie in mehr als einer Veranstaltung 
+								# verknüpft wurde -> Drop-Down-Menü mit den jew. Veranstaltungen:
+								echo 
+									'<div '.
+											'id="videoSeriesSeminars_'.$video['identifier'].'" '.
+											'style="position: absolute; '.
+												'background-color: white; border: 1px solid; '.
+												'height: auto; width: 250px; '.
+												'padding: 4px; '.
+												'display: none;'.	
+													'">'.
+										'<table class="seriesSeminarsTbl" width="100%">'.
+											'<tr>'.
+												'<td style="background-color: #eee;">'.
+													'<b>Zur Veranstaltung:</b>'.
+												'</td>'.
+												'<td '.
+														'alt="schlie&szlig;en" title="schlie&szlig;en" '.
+														'onClick="closeSeriesForSeminars()" '.
+														'style="text-align: center; vertical-align: middle; '.
+																'border: 1px solid; padding: 2px; '.
+																'background-color: #eee;">'.
+													'<span style="font-size: 18px; font-weight: bold;">x</span>'.
+												'</td>'.
+											'</tr>';
+											
+									for ($s = 0; $s < count($video['series_data']['seminars']); 
+											$s++) {
+										echo 
+											'<tr>'.
+													'<td colspan="2" class="seriesSeminarsTd" '.
+															'style="border-bottom: 1px dotted; ">'.
+														'<a target="_blank" href="'.
+																URLHelper::getScriptLink(
+																	'plugins.php/opencast/course', 
+																	array('cid' => $video['series_data']['seminars'][$s]['Seminar_id'])
+																).
+																'">'.
+															$video['series_data']['seminars'][$s]['Name'].
+														'</a>'.
+													'</td>'.
+											'</tr>';
+									}
+								echo 
+										'</table>'.
+									'</div>';
+							}
 						?>
-					</td>
 					<!-- Aufzeichungsdatum -->
 					<td>
-						<? print(str_replace(array('T','Z'), array(' um ',''), $video['start'])) ?>
+						<? 
+							print(
+#								'Am ' . 
+								date("d.m.Y", strtotime($video['start'])) . 
+								' um ' . 
+								date("H:m", strtotime($video['start'])) . 
+								' Uhr'
+							); 
+						?>
 					</td>
 					<!-- BUTTONS -->
 					<!-- Button: Video herunterladen -->
@@ -287,6 +366,9 @@
 		?>
 		</tbody>
 	</table>
+	
+	
+	
 </div>
 
 
@@ -295,6 +377,12 @@
 
 
 <script type="text/javascript">
+	
+	/**
+	 * ...
+	 * ...
+	 * ...
+	 */
 	function toggleVideoInfoRow(
 			videoID
 		) 
@@ -339,4 +427,29 @@
 			$("#videoInfoCell_"+videoID+"").html('');
 		}
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @todo 24.03.17 NTS:
+	 * Hier wird aktuell noch die Video-ID übergeben.
+	 * Logischer wäre an dieser Stelle natürlich die Series-ID.
+	 */
+	function showSeminarsForSeries(videoID)
+	{
+		$("#videoSeriesSeminars_"+videoID+"").css("display", "");
+		
+		
+	}
+	
+	/**
+	 * ...
+	 * ...
+	 * ...
+	 */
+	function closeSeriesForSeminars() 
+	{
+		$("[id^=videoSeriesSeminars_]").css("display", "none");
+	}
 </script>
+
