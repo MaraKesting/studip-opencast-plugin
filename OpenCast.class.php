@@ -80,7 +80,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 		     $show_navigation = 
 					new AutoNavigation(
 #						$this->getPluginName(), 
-						'Übersicht', 
+						utf8_decode('Übersicht'), 
 					PluginEngine::getURL('opencast/profile/list')
 			  );	
 		     $ocProfileNav->addSubNavigation('list', $show_navigation);
