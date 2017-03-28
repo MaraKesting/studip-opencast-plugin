@@ -1,7 +1,7 @@
 <?php
 /*
  * OpenCast.class.php - A course plugin for Stud.IP which includes an opencast player
- * Copyright (c) 2010  André Klaßen
+ * Copyright (c) 2010  Andrï¿½ Klaï¿½en
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -42,11 +42,11 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 
             //check if we already have an connection to an opencast matterhorn
             //.. now the subnavi
-            $main = new Navigation(_("Opencast Administration"));
+            $main = new Navigation(_(get_config("OPENCAST_GUI_NAME")."Administration"));
             // TODO think about an index page.. for the moment the config page is in charge..
             $main->setURL(PluginEngine::getURL('opencast/admin/config'));
 
-            $config = new Navigation('Opencast Einstellungen');
+            $config = new Navigation(get_config("OPENCAST_GUI_NAME").'Einstellungen');
             $config->setURL(PluginEngine::getURL('opencast/admin/config'));
             $main->addSubNavigation('oc-config', $config);
 
@@ -54,7 +54,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
             Navigation::addItem('/admin/config/oc-config', $config);
 
             if (OCModel::getConfigurationstate() && get_config("OPENCAST_SCHEDULED_RECORDINGS")) {
-                $resources = new Navigation('Opencast Ressourcen');
+                $resources = new Navigation(get_config("OPENCAST_GUI_NAME").'Ressourcen');
                 $resources->setURL(PluginEngine::getURL('opencast/admin/resources'));
                 $main->addSubNavigation('oc-resources', $resources);
                 Navigation::addItem('/admin/config/oc-resources', $resources);
@@ -68,7 +68,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
             }
         }
 
-        # Anzeige aller persönlichen (zugeordneten) Aufzeichungen:
+        # Anzeige aller persï¿½nlichen (zugeordneten) Aufzeichungen:
         $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
         $ocProfileNav->setImage(
 				$this->getPluginUrl() . '/images/oc-logo-white.png');
@@ -77,7 +77,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         $show_navigation = 
 				new AutoNavigation(
 #					$this->getPluginName(), 
-					'Übersicht', 
+					'ï¿½bersicht', 
 				PluginEngine::getURL('opencast/profile/list')
 		  );	
         $ocProfileNav->addSubNavigation('list', $show_navigation);
@@ -110,7 +110,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
      * Diese Methode ist notwendig, um den Reiter "Meine Vorlesungsvideos" 
      * im Profil anzeigen zu lassen.
      * 
-     * Ursprüngliche Doku:
+     * Ursprï¿½ngliche Doku:
      * 
      * Return a template (an instance of the Flexi_Template class)
      * to be rendered on the given user's home page. Return NULL to
@@ -165,10 +165,10 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 
         if ($GLOBALS['perm']->have_studip_perm('user', $course_id)) {
             $ocgetcount = $ocmodel->getCount($last_visit);
-            $text = sprintf(_('Es gibt %s neue Opencast Aufzeichnung(en) seit ihrem letzten Besuch.'), $ocgetcount);
+            $text = sprintf(_('Es gibt %s neue %s Aufzeichnung(en) seit ihrem letzten Besuch.'), $ocgetcount, get_config("OPENCAST_GUI_NAME"));
         } else {
             $num_entries = 0;
-            $text = 'Opencast Aufzeichnungen';
+            $text = get_config("OPENCAST_GUI_NAME").' Aufzeichnungen';
         }
 
         $navigation = new Navigation('opencast', PluginEngine::getURL($this, array(), 'course/index/false'));
@@ -236,7 +236,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 
         $ocmodel = new OCCourseModel($course_id);
 
-        $main = new Navigation("Opencast");
+        $main = new Navigation(get_config("OPENCAST_GUI_NAME"));
         $main->setURL(PluginEngine::getURL('opencast/course'));
         $main->setImage($this->getPluginUrl() . '/images/oc-logo-white.png');
         $main->setActiveImage($this->getPluginUrl() . '/images/oc-logo-black.png');
