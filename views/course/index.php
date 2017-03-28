@@ -30,7 +30,7 @@
                 $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
                         'id' => 'oc_upload_dialog'
                 ));
-                $actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
+                //$actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
 
             }
 
