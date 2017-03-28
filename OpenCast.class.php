@@ -69,19 +69,23 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         }
 
         # Anzeige aller persönlichen (zugeordneten) Aufzeichungen:
-        $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
-        $ocProfileNav->setImage(
-				$this->getPluginUrl() . '/images/oc-logo-white.png');
-        $ocProfileNav->setActiveImage(
-				$this->getPluginUrl() . '/images/oc-logo-black.png');
-        $show_navigation = 
-				new AutoNavigation(
-#					$this->getPluginName(), 
-					'Übersicht', 
-				PluginEngine::getURL('opencast/profile/list')
-		  );	
-        $ocProfileNav->addSubNavigation('list', $show_navigation);
-        Navigation::addItem('/profile/OC', $ocProfileNav);
+        if ( ! $_GET['username'] 
+        		|| $_GET['username'] == $_SESSION['auth']->auth['uname'] )
+        {
+		     $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
+		     $ocProfileNav->setImage(
+					$this->getPluginUrl() . '/images/oc-logo-white.png');
+		     $ocProfileNav->setActiveImage(
+					$this->getPluginUrl() . '/images/oc-logo-black.png');
+		     $show_navigation = 
+					new AutoNavigation(
+#						$this->getPluginName(), 
+						'Übersicht', 
+					PluginEngine::getURL('opencast/profile/list')
+			  );	
+		     $ocProfileNav->addSubNavigation('list', $show_navigation);
+		     Navigation::addItem('/profile/OC', $ocProfileNav);
+		  }
 
         PageLayout::addStylesheet($this->getpluginUrl() . '/stylesheets/oc.css');
         PageLayout::addScript($this->getPluginUrl() . '/javascripts/application.js');
