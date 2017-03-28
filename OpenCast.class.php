@@ -1,7 +1,7 @@
 <?php
 /*
  * OpenCast.class.php - A course plugin for Stud.IP which includes an opencast player
- * Copyright (c) 2010  Andrï¿½ Klaï¿½en
+ * Copyright (c) 2010  André Klaßen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -68,20 +68,24 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
             }
         }
 
-        # Anzeige aller persï¿½nlichen (zugeordneten) Aufzeichungen:
-        $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
-        $ocProfileNav->setImage(
-				$this->getPluginUrl() . '/images/oc-logo-white.png');
-        $ocProfileNav->setActiveImage(
-				$this->getPluginUrl() . '/images/oc-logo-black.png');
-        $show_navigation = 
-				new AutoNavigation(
-#					$this->getPluginName(), 
-					'ï¿½bersicht', 
-				PluginEngine::getURL('opencast/profile/list')
-		  );	
-        $ocProfileNav->addSubNavigation('list', $show_navigation);
-        Navigation::addItem('/profile/OC', $ocProfileNav);
+        # Anzeige aller persönlichen (zugeordneten) Aufzeichungen:
+        if ( ! $_GET['username'] 
+        		|| $_GET['username'] == $_SESSION['auth']->auth['uname'] )
+        {
+		     $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
+		     $ocProfileNav->setImage(
+					$this->getPluginUrl() . '/images/oc-logo-white.png');
+		     $ocProfileNav->setActiveImage(
+					$this->getPluginUrl() . '/images/oc-logo-black.png');
+		     $show_navigation = 
+					new AutoNavigation(
+#						$this->getPluginName(), 
+						utf8_decode('Übersicht'), 
+					PluginEngine::getURL('opencast/profile/list')
+			  );	
+		     $ocProfileNav->addSubNavigation('list', $show_navigation);
+		     Navigation::addItem('/profile/OC', $ocProfileNav);
+		  }
 
         PageLayout::addStylesheet($this->getpluginUrl() . '/stylesheets/oc.css');
         PageLayout::addScript($this->getPluginUrl() . '/javascripts/application.js');
