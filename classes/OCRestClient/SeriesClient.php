@@ -129,7 +129,7 @@
             $output = $stmt->fetch(PDO::FETCH_ASSOC);
             $name = utf8_encode($output['Name']);
      
-            // Prüfen, ob der Name der Veranstaltung in Opencast vorhanden ist
+            // Prï¿½fen, ob der Name der Veranstaltung in Opencast vorhanden ist
             $series_exists_boolean = false;
             foreach ($DBSeries as $key=>$value) {
 				$series_exists_boolean = (($DBSeries[$key]['title']!="" && $name!="" ? strpos($DBSeries[$key]['title'], $name)===0 : false) || $series_exists_boolean);
@@ -152,14 +152,18 @@
 	            $dublinCore = utf8_encode(OCSeriesModel::createSeriesDC($course_id));
 	            
 	            
-	            $ACLData = array('ROLE_ADMIN' => array(
-	                                                'read' => 'true',
-	                                                'write' => 'true',
-	                                                'analyze' => 'true'),
-	                               'ROLE_ANONYMOUS' => array(
-	                                                'read' => 'true'
-	                               )
-	                        );
+	            $ACLData = array(
+	                'ROLE_ADMIN' => array(
+	                    'read' => 'true',
+                        'write' => 'true',
+                        'analyze' => 'true'),
+                    'ROLE_GROUP_GUI_USER' => array(
+                        'read' => 'true',
+                        'write' => 'true'),
+                    'ROLE_ANONYMOUS' => array(
+                        'read' => 'true'
+                    )
+                );
 	                        
 	            $ACL = OCSeriesModel::createSeriesACL($ACLData); 
 	            $post = array('series' => $dublinCore,
@@ -222,7 +226,7 @@
             $service_url = "/".$series_id;
             curl_setopt($this->ochandler,CURLOPT_URL,$this->matterhorn_base_url.$service_url);
             curl_setopt($this->ochandler, CURLOPT_CUSTOMREQUEST, "DELETE");
-            //TODO über REST Classe laufen lassen, getXML, getJSON...
+            //TODO ï¿½ber REST Classe laufen lassen, getXML, getJSON...
             $response = curl_exec($this->ochandler);
             $httpCode = curl_getinfo($this->ochandler, CURLINFO_HTTP_CODE);
             if($httpCode == 204){
