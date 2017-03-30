@@ -175,7 +175,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
             $text = get_config("OPENCAST_GUI_NAME").' Aufzeichnungen';
         }
 
-        $navigation = new Navigation('opencast', PluginEngine::getURL($this, array(), 'course/index/false'));
+        $navigation = new Navigation('opencast', PluginEngine::getURL($this, array(), 'course'));
         $navigation->setBadgeNumber($num_entries);
 
         if ($ocgetcount > 0) {
