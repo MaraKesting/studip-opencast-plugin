@@ -80,7 +80,7 @@ class CourseController extends StudipController
         $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
         $this->set_layout($layout);
 
-        $this->set_title(_("Opencast Player"));
+        $this->set_title(_(get_config("OPENCAST_GUI_NAME")));
         if($upload_message == 'true') {
             $this->flash['messages'] = array('success' =>_('Die Datei wurden erfolgreich hochgeladen. Je nach Größe der Datei und Auslastung des Opencast Matterhorn-Server kann es einige Zeit in Anspruch nehmen, bis die entsprechende Aufzeichnung in der Liste sichtbar wird.'));
         }

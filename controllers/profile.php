@@ -31,7 +31,7 @@ class ProfileController extends AuthenticatedController
 #		$name = sprintf('oc_admin.performed.%s_%s', $klass, $action);
 #		NotificationCenter::postNotification($name, $this);
 
-		PageLayout::setTitle(_('Videoverwaltung'));
+		PageLayout::setTitle(_(get_config("OPENCAST_GUI_NAME")));
 	}
 	
 	
