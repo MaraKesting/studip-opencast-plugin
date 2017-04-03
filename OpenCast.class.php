@@ -72,7 +72,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         if ( ! $_GET['username'] 
         		|| $_GET['username'] == $_SESSION['auth']->auth['uname'] )
         {
-		     $ocProfileNav = new Navigation('Meine Vorlesungsvideos');
+		     $ocProfileNav = new Navigation(get_config("OPENCAST_GUI_NAME"));
 		     $ocProfileNav->setImage(
 					$this->getPluginUrl() . '/images/oc-logo-white.png');
 		     $ocProfileNav->setActiveImage(
@@ -80,7 +80,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 		     $show_navigation = 
 					new AutoNavigation(
 #						$this->getPluginName(), 
-						utf8_decode('Übersicht'), 
+						'Übersicht', 
 					PluginEngine::getURL('opencast/profile/list')
 			  );	
 		     $ocProfileNav->addSubNavigation('list', $show_navigation);
