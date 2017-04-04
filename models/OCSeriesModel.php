@@ -284,11 +284,11 @@ class OCSeriesModel {
         $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $date = getdate( $res[0]['start_time'] );
         if ($date['mon'] <= 3)
-            $sem = ' - WiSe' . substr(($date['year']-1), 2, 2) . '/' . substr(($date['year']), 2, 2);
+            $sem = 'WS' . substr(($date['year']-1), 2, 2) . '-' . $date['year'];
         else if ($date['mon'] >= 10)
-            $sem = ' - WiSe' . substr(($date['year']), 2, 2) . '/' . substr(($date['year']+1), 2, 2);
+            $sem = 'WS' . substr(($date['year']), 2, 2) . '-' . ($date['year']+1);
         else
-            $sem = ' - SoSe' . $date['year'];
+            $sem = 'SS' . $date['year'];
         // Patch "Semester anh�ngen: Ende
 
         global $STUDIP_BASE_PATH;

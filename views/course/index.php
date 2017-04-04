@@ -73,6 +73,10 @@
     <? endif;?>
 <? endforeach;?>
 
+<? if($flash['delete_episode']) : ?>
+    <?= createQuestion2(sprintf(_('Wollen Sie die Episode "%s" wirklich löschen?'), utf8_decode($active['title'])), array('episode_id' => $this->active_id, 'delete' => true), array('cancel' => true), PluginEngine::getLink('opencast/course/remove_episode/'. get_ticket())); ?>
+<? endif ?>
+
 
 <? $visible = OCModel::getVisibilityForEpisode($course_id, $active['id'])?>
 <div class="oc_flex">
