@@ -50,6 +50,13 @@
 
             // debugging
             //curl_setopt($this->ochandler, CURLOPT_VERBOSE, true);
+            
+            # Notwendige CURL-Optionen für Matterhorn: (optional in #)
+#           curl_setopt($this->ochandler, CURLOPT_HTTPHEADER, array("X-Requested-Auth: Digest", "X-Opencast-Matterhorn-Authorization : true"));
+#           curl_setopt($this->ochandler, CURLOPT_HEADER, false);
+#           curl_setopt($this->ochandler, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($this->ochandler, CURLOPT_SSL_VERIFYPEER, false); # für https !!!
+#           curl_setopt($this->ochandler, CURLOPT_CUSTOMREQUEST, 'GET');
         }
 
         /**
