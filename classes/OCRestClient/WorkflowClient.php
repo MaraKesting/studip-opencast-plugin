@@ -77,11 +77,9 @@
             $wf_defs = self::getDefinitions();
 
             $tagged_wfs = array();
-            if(is_array($wf_defs->definitions)) {
-                foreach ($wf_defs->definitions->definition as $wdef) {
-                    if (is_array($wdef->tags->tag)) {
-                        $tagged_wfs[] = array('id' => $wdef->id, 'description' => $wdef->description, 'tags' => $wdef->tags->tag);
-                    }
+            foreach($wf_defs->definitions->definition as $wdef){
+                if(is_array($wdef->tags->tag)){
+                    $tagged_wfs[] = array('id' => $wdef->id, 'description' => $wdef->description, 'tags' => $wdef->tags->tag);
                 }
             }
 

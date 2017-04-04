@@ -84,9 +84,6 @@ OC = {
             OC.searchEpisodeList();
             OC.episodeListener(cid);
 
-
-            jQuery('.oce_item').first().click();
-
         });
 
     },
@@ -244,6 +241,7 @@ OC = {
 
         jQuery('.oce_list').empty();
         jQuery('.oce_list').html(oce_list);
+
 
     },
 

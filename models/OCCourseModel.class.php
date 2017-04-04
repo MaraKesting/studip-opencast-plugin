@@ -132,10 +132,10 @@ class OCCourseModel
             foreach($oc_episodes as $episode){
                 $lastpos++;
                 $timestamp = time();
-                $episode['visibility'] = 'false';
+                $episode['visibility'] = 'true';
                 $episode['position'] = $lastpos;
                 $episode['mkdate'] = $timestamp;
-                OCModel::setCoursePositionForEpisode($episode['id'], $lastpos, $this->getCourseID(), 'false', $timestamp);
+                OCModel::setCoursePositionForEpisode($episode['id'], $lastpos, $this->getCourseID(), 'true', $timestamp);
                 $episodes[$episode['position']] = $episode;
                 NotificationCenter::postNotification('NewEpisodeForCourse',array('episode_id' => $episode['id'],'course_id' => $this->getCourseID(), 'episode_title' => $episode['title']));
             }

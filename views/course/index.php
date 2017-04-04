@@ -9,9 +9,7 @@
     STUDIP.hasperm  = <?=var_export($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id))?>;
     OC.states = <?=json_encode($states)?>;
     OC.initIndexpage();
-    <?  if($series_metadata [0] ['schedule'] == '1') : ?>
-        OC.initUpload(<?= OC_UPLOAD_CHUNK_SIZE ?>);
-    <? endif; ?>
+    OC.initUpload(<?= OC_UPLOAD_CHUNK_SIZE ?>);
 </script>
 
 <?
@@ -25,12 +23,12 @@
         {
             $actions->addLink(_("Verknüpfung aufheben"), PluginEngine::getLink ('opencast/course/remove_series/' . get_ticket()), 'icons/16/blue/trash.png');
             $actions->addLink(_("Episodenliste aktualisieren"), PluginEngine::getLink ('opencast/course/refresh_episodes/' . get_ticket()), 'icons/16/blue/refresh.png');
+            $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
+                'id' => 'oc_upload_dialog'
+            ));
             if($series_metadata [0] ['schedule'] == '1')
             {
-                $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
-                        'id' => 'oc_upload_dialog'
-                ));
-                //$actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
+                $actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
 
             }
 
@@ -73,6 +71,10 @@
     <? endif;?>
 <? endforeach;?>
 
+<? if($flash['delete_episode']) : ?>
+    <?= createQuestion2(sprintf(_('Wollen Sie die Episode "%s" wirklich löschen?'), utf8_decode($active['title'])), array('episode_id' => $this->active_id, 'delete' => true), array('cancel' => true), PluginEngine::getLink('opencast/course/remove_episode/'. get_ticket())); ?>
+<? endif ?>
+
 
 <? $visible = OCModel::getVisibilityForEpisode($course_id, $active['id'])?>
 <div class="oc_flex">
@@ -85,7 +87,6 @@
             <div></div>
         </div>
         <div class="oce_playercontainer">
-            <!--
             <span id="oc_active_episode" class="hidden" data-activeepisode="<?=$active['id']?>">
             </span>
             <? if($theodul) : ?>
@@ -121,7 +122,11 @@
                     <div style="text-align: left; font-style: italic;">Weitere
                         Optionen:</div>
                     <div class="button-group">
-                        <?= Studip\LinkButton::create(_('Erweiterter Player'), URLHelper::getURL('http://'.$engage_player_url), array('target'=> '_blank','class' => 'ocextern')) ?>
+                        <?
+                        if (get_config('OPENCAST_EXTENDED_PLAYER_BUTTON')) {
+                            print(Studip\LinkButton::create(_('Erweiterter Player'), URLHelper::getURL('http://' . $engage_player_url), array('target' => '_blank', 'class' => 'ocextern')));
+                        }
+                        ?>
                         <? if($active['presenter_download']) : ?>
                             <?= Studip\LinkButton::create(_('ReferentIn'), URLHelper::getURL($active['presenter_download']), array('target'=> '_blank', 'class' => 'download presenter')) ?>
                         <? endif;?>
@@ -139,12 +144,11 @@
                             <? else : ?>
                                 <?= Studip\LinkButton::create(_('Aufzeichnung sichtbar'), PluginEngine::getLink('opencast/course/toggle_visibility/' . $active_id .'/'. $active['position']), array('class' => 'ocvisible ocspecial', 'id' => 'oc-togglevis', 'data-episode-id' => $active_id,'data-position' => $active['position'])); ?>
                             <? endif; ?>
-
+                            <?= Studip\LinkButton::create(_('Aufzeichnung löschen'), PluginEngine::getLink('opencast/course/remove_episode/' . get_ticket())); ?>
                         </div>
                         <? endif;?>
                     </div>
             </div>
-        -->
         </div>
     </div>
     <div id="episodes" class="oc_flexitem oc_flexepisodelist">
@@ -208,10 +212,7 @@
 </div>
 <? else: ?>
     <? if(empty($this->connectedSeries) && $GLOBALS['perm']->have_studip_perm('dozent', $course_id)) :?>
-            <? if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists") :?>
-            <? //if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists"&&$_SESSION['resultCreateSeriesForSeminar'] != "new_series_created") :?>
-				<?= MessageBox::info(_("Sie haben noch keine Series aus Opencast mit dieser Veranstaltung verknüpft. Bitte erstellen Sie eine neue Series oder verknüpfen eine bereits vorhandene Series.")) ?>
-			<? endif; ?>
+            <?= MessageBox::info(_("Sie haben noch keine Series aus Opencast mit dieser Veranstaltung verknüpft. Bitte erstellen Sie eine neue Series oder verknüpfen eine bereits vorhandene Series.")) ?>
     <? else: ?>
         <?=MessageBox::info(_('Es wurden bislang keine Vorlesungsaufzeichnungen bereitgestellt.'));?>
     <? endif;?>
@@ -235,5 +236,5 @@
 
 <!--- hidden -->
 <div class="hidden" id="course_id" data-courseId="<?=$course_id?>"></div>
-<?= $this->render_partial("course/_playerfragment", array()) ?>
+<?= $this->render_partial("course/_playerfragment", array("extendedPlayerButton" => get_config("OPENCAST_EXTENDED_PLAYER_BUTTON"))) ?>
 <?= $this->render_partial("course/_episodelist", array()) ?>
