@@ -9,9 +9,7 @@
     STUDIP.hasperm  = <?=var_export($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id))?>;
     OC.states = <?=json_encode($states)?>;
     OC.initIndexpage();
-    <?  if($series_metadata [0] ['schedule'] == '1') : ?>
-        OC.initUpload(<?= OC_UPLOAD_CHUNK_SIZE ?>);
-    <? endif; ?>
+    OC.initUpload(<?= OC_UPLOAD_CHUNK_SIZE ?>);
 </script>
 
 <?
@@ -25,13 +23,12 @@
         {
             $actions->addLink(_("Verknüpfung aufheben"), PluginEngine::getLink ('opencast/course/remove_series/' . get_ticket()), 'icons/16/blue/trash.png');
             $actions->addLink(_("Episodenliste aktualisieren"), PluginEngine::getLink ('opencast/course/refresh_episodes/' . get_ticket()), 'icons/16/blue/refresh.png');
+            $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
+                'id' => 'oc_upload_dialog'
+            ));
             if($series_metadata [0] ['schedule'] == '1')
             {
-                $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
-                        'id' => 'oc_upload_dialog'
-                ));
                 //$actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
-
             }
 
         } else
