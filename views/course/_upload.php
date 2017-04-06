@@ -16,7 +16,11 @@ use Studip\Button,
 <!--
     <input class="oc_input" type="text" maxlength="255" name="creator" id="creator" value="<?=get_fullname_from_uname($GLOBALS['auth']->auth['uname']) ?>" required>
   -->
-    <input type="oc_input" type="text" maxlength="255" name="creator" id="creator" value="<?=$GLOBALS['auth']->auth['uname'] ?>" disabled>
+    <input type="oc_input" type="text" maxlength="255" 
+    	name="creator" id="creator" value="<?=$GLOBALS['auth']->auth['uname'] ?>" 
+    	readonly 
+    	style="background-color: #eee;"
+    >
     
     
     <label id="recordingDateLabel" class="scheduler-label" for="recordDate">
