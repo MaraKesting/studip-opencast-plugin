@@ -10,10 +10,13 @@ use Studip\Button,
     <input class="oc_input" type="text" maxlength="255" name="title" id="titleField" required>
 
     <label id="creatorLabel" for="creator">
-        <h4><span><?= _("Vortragende") ?></span></h4>
+        <h4><span><?= _("Autor") ?></span></h4>
     </label>
 
+<!--
     <input class="oc_input" type="text" maxlength="255" name="creator" id="creator" value="<?=get_fullname_from_uname($GLOBALS['auth']->auth['uname']) ?>" required>
+  -->
+    <input type="oc_input" type="text" maxlength="255" name="creator" id="creator" value="<?=$GLOBALS['auth']->auth['uname'] ?>" disabled>
     
     
     <label id="recordingDateLabel" class="scheduler-label" for="recordDate">
