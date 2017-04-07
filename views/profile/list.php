@@ -84,7 +84,7 @@
 					</td>
 					<!-- Titel -->
 					<td>
-						<? print($video['title']) ?>
+						<? print(utf8_decode($video['title'])) ?>
 					</td>
 					<!-- Veröffenticht -->
 					<td style="text-align: center;">
