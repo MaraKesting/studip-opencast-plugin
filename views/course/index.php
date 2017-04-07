@@ -26,10 +26,10 @@
             $actions->addLink(_("Medien hochladen"), '#', 'icons/16/blue/upload.png', array (
                 'id' => 'oc_upload_dialog'
             ));
-            if($series_metadata [0] ['schedule'] == '1')
-            {
-                //$actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
-            }
+#           if($series_metadata [0] ['schedule'] == '1')
+#           {
+#               $actions->addLink(_("Workflow konfigurieren"), '#', 'icons/16/blue/admin.png', array('id' => 'oc_workflow_dialog'));
+#           }
 
         } else
         {
