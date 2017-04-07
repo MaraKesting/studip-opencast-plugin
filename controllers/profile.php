@@ -10,6 +10,8 @@
  */
 
 require_once 'app/controllers/authenticated_controller.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 
+	'classes/OCRestClient/SearchClient.php';
 
 
 class ProfileController extends AuthenticatedController
@@ -107,9 +109,10 @@ class ProfileController extends AuthenticatedController
 				}
 			}
 		}
-#		echo '<pre style="color: #fff;">'.print_r($this->videos,1).'</pre>';
-#		echo '<pre style="color: #fff;">'.print_r($this->videos[5],1).'</pre>';
 		
+		# OpenCast-Base-URL beziehen:
+		$search_client = SearchClient::getInstance();
+		$this->baseURL = $search_client->getBaseURL();
 		
 		# OpenCast-Sprachkürzel + Sprachen auf deutsch:
 		$this->lang = array(
@@ -137,8 +140,6 @@ class ProfileController extends AuthenticatedController
 			'ukr' => 'Ukrainisch'
 		);
 	}
-	
-	
 }
 
 

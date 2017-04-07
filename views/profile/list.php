@@ -70,7 +70,7 @@
 				
 		?>
 				<tr class="<? if($even){print("hover_even");}else{print("hover_odd");} ?>" 
-						onClick="toggleVideoInfoRow('<? print($video['identifier']) ?>')" 
+						onClick="toggleVideoInfoRow('<? print($video['identifier']) ?>', '<? print($this->baseURL) ?>')" 
 						 class="videoHeaderRow" 
 						 id="videoHeaderRow_<? print($video['identifier']) ?>">
 					<!-- Status -->
@@ -383,10 +383,9 @@
 	 * ...
 	 * ...
 	 */
-	function toggleVideoInfoRow(
-			videoID
-		) 
+	function toggleVideoInfoRow (videoID, baseURL) 
 	{
+//		alert(baseURL);
 		$("[id^=videoHeaderRow_]").css("background-color", "");
 		$("[id^=videoHeaderRow_]").css("font-weight", "");
 		
@@ -395,8 +394,8 @@
 			$("[id^=videoInfoRow_]").css("display", "none");
 			$("[id^=videoInfoCell_]").html('');
 			var content =
-					'<iframe src="https://opencast-present.rz.tu-bs.de/'+
-								'engage/theodul/ui/core.html?'+
+					'<iframe src="'+
+						baseURL+'/'+'engage/theodul/ui/core.html?'+
 							'id='+videoID+''+
 							'&mode=embed" '+
 							'style="'+
