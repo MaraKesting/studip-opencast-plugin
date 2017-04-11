@@ -250,7 +250,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         $overview->setURL(PluginEngine::getURL('opencast/course/index'));
 
         $scheduler = new Navigation('Aufzeichnungen planen');
-        $scheduler->setURL(PluginEngine::getURL('opencast/course/scheduler'));
+#       $scheduler->setURL(PluginEngine::getURL('opencast/course/scheduler'));
 
         $main->addSubNavigation('overview', $overview);
 
