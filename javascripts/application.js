@@ -225,11 +225,11 @@ OC = {
             });
             if (jQuery('#oc-togglevis').hasClass('ocvisible')) {
 
-                jQuery('#oc-togglevis').removeClass('ocvisible').addClass('ocinvisible').text('Aufzeichnung unsichtbar');
+                jQuery('#oc-togglevis').removeClass('ocvisible').addClass('ocinvisible').text('Aufzeichnung veröffentlichen');
 
 
             } else {
-                jQuery('#oc-togglevis').removeClass('ocinvisible').addClass('ocvisible').text('Aufzeichnung sichtbar');
+                jQuery('#oc-togglevis').removeClass('ocinvisible').addClass('ocvisible').text('Aufzeichnung verstecken');
             }
         });
 

@@ -54,9 +54,9 @@
             <% if (dozent) { %>
                 <div class="button-group" style="float:right">
                     <% if (episode.visibility == 'true')  {%>
-                        <a class="ocvisible ocspecial button" data-episode-id="<%= episode.id%>" data-position="<%=episode.position%>" href="replaceme" id="oc-togglevis" tabindex="0">Aufzeichnung sichtbar</a>
+                        <a class="ocvisible ocspecial button" data-episode-id="<%= episode.id%>" data-position="<%=episode.position%>" href="replaceme" id="oc-togglevis" tabindex="0">Aufzeichnung verstecken</a>
                     <% } else { %>
-                        <a class="ocinvisible ocspecial button" data-episode-id="<%=episode.id%>" data-position="<%=episode.position%>" href="replaceme" id="oc-togglevis" tabindex="0">Aufzeichnung unsichtbar</a>
+                        <a class="ocinvisible ocspecial button" data-episode-id="<%=episode.id%>" data-position="<%=episode.position%>" href="replaceme" id="oc-togglevis" tabindex="0">Aufzeichnung veröffentlichen</a>
                     <% } %>
                     <button class="button" form="delete_form">Aufzeichnung löschen</button>
                 </div>
