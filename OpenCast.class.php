@@ -107,7 +107,9 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         }
 
         NotificationCenter::addObserver($this, "NotifyUserOnNewEpisode", "NewEpisodeForCourse");
-
+        
+        # Tu Braunschweig - Own JavaScripts- & -Functions:
+        PageLayout::addScript($this->getPluginUrl() . '/javascripts/tubs-functions.js');
     }
     
     /** 
