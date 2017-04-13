@@ -7,7 +7,42 @@ use Studip\Button,
     <label id="title" for="titleField">
         <h4><?= _('Titel') ?></h4>
     </label>
-    <input class="oc_input" type="text" maxlength="255" name="title" id="titleField" required>
+    <input class="oc_input" type="text" maxlength="255" name="title" 
+        id="titleField" 
+        value="Mein neues Video <? print( date("Y-m-d H:i") )?>" 
+        required 
+        onClick="delTitle()" onfocusout="fillTitle()" style="color: #a0a0a0;">
+
+<script type="text/javascript">
+	function delTitle() {
+		if ( $("#titleField").css('color') == 'rgb(160, 160, 160)' ) {
+			$("#titleField").val('');
+			$("#titleField").css('color', '#000');
+		}
+	}
+	function fillTitle() {
+		if ( $("#titleField").val() == '' 
+				// Die 2. if-Bedingung soll greifen, wenn
+				//  +  das Aufnahme-Datum ODER 
+				//  +  die Startzeit-Dropdowns (Stunde : Minute) 
+				// verändert werden. 
+				// Damit soll der Default-Titel (sofern kein eigener angegeben) 
+				// im Datum konsistent zu den Einstellungen gehalten werden.
+				|| $("#titleField").val().substr(0,16) == 'Mein neues Video' ) 
+		{
+			var startTimeHour = $("#startTimeHour").val();
+			if (startTimeHour.length == 1)
+				startTimeHour = '0' + startTimeHour;
+			var startTimeMin = $("#startTimeMin").val();
+			if (startTimeMin.length == 1)
+				startTimeMin = '0' + startTimeMin;
+			$("#titleField").val('Mein neues Video ' + 
+				$("#recordDate").val() + ' ' + 
+				startTimeHour + ':' + startTimeMin );
+			$("#titleField").css('color', '#a0a0a0');
+		}
+	}
+</script>
 
     <label id="creatorLabel" for="creator">
         <h4><span><?= _("Autor") ?></span></h4>
@@ -26,12 +61,14 @@ use Studip\Button,
     <label id="recordingDateLabel" class="scheduler-label" for="recordDate">
         <h4><span><?= _('Aufnahmedatum') ?></span></h4>
     </label>
-    <input class="oc_input" type="date" name="recordDate" value="<?= $this->date ?>" id="recordDate" size="10" required>
+    <input class="oc_input" type="date" name="recordDate" 
+        value="<?= $this->date ?>" id="recordDate" size="10" 
+        onChange="fillTitle()" required>
 
     <label id="startTimeLabel" for="startTimeHour">
         <h4><span><?= _('Startzeit') ?></span></h4>
     </label>
-    <select id="startTimeHour" name="startTimeHour">
+    <select id="startTimeHour" name="startTimeHour" onChange="fillTitle()">
         <?php for ($i = 0; $i <= 23; $i++): ?>
             <?php if ($i < 10) {
                 $in = '0' . $i;
@@ -46,7 +83,7 @@ use Studip\Button,
         <?php endfor; ?>
     </select>
     :
-    <select id="startTimeMin" name="startTimeMin">
+    <select id="startTimeMin" name="startTimeMin" onChange="fillTitle()">
         <?php for ($i = 0; $i < 60; $i++): ?>
             <?php if ($i < 10) {
                 $in = '0' . $i;
