@@ -284,6 +284,7 @@ class CourseController extends StudipController
             $archiveClient = ArchiveClient::getInstance();
 
             if($archiveClient->applyWorkflow('ng-retract', $episodeId)) {
+                $stmt = OCModel::removeStoredEpisode($episodeId, $_SESSION['SessionSeminar']);
                 $this->flash['messages'] = array('success'=> _("Die Episode wurde erfolgreich gelöscht.<br>Der Vorgang kann einige Minuten dauern. Bitte aktualisierern Sie in wenigen Minuten die Episodenliste."));
             } else {
                 $this->flash['messages']['error'] = _("Löschen der Episode fehlgeschlagen!");
