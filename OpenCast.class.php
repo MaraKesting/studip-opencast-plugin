@@ -42,11 +42,11 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
 
             //check if we already have an connection to an opencast matterhorn
             //.. now the subnavi
-            $main = new Navigation(_(get_config("OPENCAST_GUI_NAME")."Administration"));
+            $main = new Navigation(_(get_config("OPENCAST_GUI_NAME")." - Administration"));
             // TODO think about an index page.. for the moment the config page is in charge..
             $main->setURL(PluginEngine::getURL('opencast/admin/config'));
 
-            $config = new Navigation(get_config("OPENCAST_GUI_NAME").'Einstellungen');
+            $config = new Navigation(get_config("OPENCAST_GUI_NAME").' - Einstellungen');
             $config->setURL(PluginEngine::getURL('opencast/admin/config'));
             $main->addSubNavigation('oc-config', $config);
 
@@ -54,7 +54,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
             Navigation::addItem('/admin/config/oc-config', $config);
 
             if (OCModel::getConfigurationstate() && get_config("OPENCAST_SCHEDULED_RECORDINGS")) {
-                $resources = new Navigation(get_config("OPENCAST_GUI_NAME").'Ressourcen');
+                $resources = new Navigation(get_config("OPENCAST_GUI_NAME").' - Ressourcen');
                 $resources->setURL(PluginEngine::getURL('opencast/admin/resources'));
                 $main->addSubNavigation('oc-resources', $resources);
                 Navigation::addItem('/admin/config/oc-resources', $resources);
