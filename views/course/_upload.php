@@ -11,7 +11,7 @@ use Studip\Button,
         id="titleField" 
         value="Mein neues Video <? print( date("Y-m-d H:i") )?>" 
         required 
-        onClick="delTitle()" onfocusout="fillTitle()" style="color: #a0a0a0;">
+        onClick="delTitle()" onkeydown="makeTitleBlack()" onfocusout="fillTitle()" style="color: #a0a0a0;">
 
     <label id="creatorLabel" for="creator">
         <h4><span><?= _("Autor") ?></span></h4>

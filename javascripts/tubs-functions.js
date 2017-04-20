@@ -1,16 +1,3 @@
-/*
- *
- *
- *
- *
- *
- */
- 
- 
- 
-/*
- *
- */
 function delTitle() 
 {
 	if ( $("#titleField").css('color') == 'rgb(160, 160, 160)' ) {
@@ -19,10 +6,6 @@ function delTitle()
 	}
 }
 
-
-/*
- *
- */
 function fillTitle() 
 {
 	if ( $("#titleField").val() == '' 
@@ -45,4 +28,9 @@ function fillTitle()
 			startTimeHour + ':' + startTimeMin );
 		$("#titleField").css('color', '#a0a0a0');
 	}
+}
+
+function makeTitleBlack()
+{
+        $("#titleField").css('color', '#000');
 }
