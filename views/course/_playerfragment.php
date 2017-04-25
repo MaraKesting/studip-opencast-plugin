@@ -51,7 +51,7 @@
             <form action="<?= PluginEngine::getLink('opencast/course/remove_episode') ?>" id="delete_form" name="delete_form">
                 <input type="hidden" name="episode_id" value="<%=episode.id%>">
             </form>
-            <% if (dozent) { %>
+            <% if (tutor) { %>
                 <div class="button-group" style="float:right">
                     <% if (episode.visibility == 'true')  {%>
                         <a class="ocvisible ocspecial button" data-episode-id="<%= episode.id%>" data-position="<%=episode.position%>" href="replaceme" id="oc-togglevis" tabindex="0">Aufzeichnung verstecken</a>

@@ -6,7 +6,7 @@
 <?= $this->render_partial('messages') ?>
 
 <script language="JavaScript">
-    STUDIP.hasperm  = <?=var_export($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id))?>;
+    STUDIP.hasperm  = <?=var_export($GLOBALS['perm']->have_studip_perm('tutor', $this->course_id))?>;
     OC.states = <?=json_encode($states)?>;
     OC.initIndexpage();
     OC.initUpload(<?= OC_UPLOAD_CHUNK_SIZE ?>);
@@ -15,7 +15,7 @@
 <?
     $sidebar = Sidebar::get();
     
-    if($GLOBALS ['perm']->have_studip_perm ('dozent', $this->course_id))
+    if($GLOBALS ['perm']->have_studip_perm ('tutor', $this->course_id))
     {
         $actions = new ActionsWidget ();
         $upload = '';
@@ -133,7 +133,7 @@
                             <?= Studip\LinkButton::create(_('Audio'), URLHelper::getURL($active['audio_download']), array('target'=> '_blank', 'class' => 'download audio')) ?>
                         <? endif;?>
                         </div>
-                        <? if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) :?>
+                        <? if($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) :?>
                         <div class="button-group" style="float:right">
                             <? if ($visible && $visible['visible'] == 'false') : ?>
                                 <?= Studip\LinkButton::create(_('Aufzeichnung unsichtbar'), PluginEngine::getLink('opencast/course/toggle_visibility/' . $active_id .'/'. $active['position']), array('class' => 'ocinvisible ocspecial', 'id' => 'oc-togglevis', 'data-episode-id' => $active_id, 'data-position' => $active['position'])); ?>
@@ -155,8 +155,8 @@
         </span>
         </img>
         <ul class="oce_list list"
-            <?=($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) ? 'id="oce_sortablelist"' : ''?>>
-            <? if($GLOBALS['perm']->have_studip_perm('dozent', $course_id) && !empty($states)) :?>
+            <?=($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) ? 'id="oce_sortablelist"' : ''?>>
+            <? if($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && !empty($states)) :?>
                 <? foreach($states as $workflow_id => $state) :?>
                 <li class="uploaded oce_item" style="position: relative;">
 
@@ -208,7 +208,7 @@
     </div>
 </div>
 <? else: ?>
-    <? if(empty($this->connectedSeries) && $GLOBALS['perm']->have_studip_perm('dozent', $course_id)) :?>
+    <? if(empty($this->connectedSeries) && $GLOBALS['perm']->have_studip_perm('tutor', $course_id)) :?>
             <? if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists") :?>
             <? //if ($_SESSION['resultCreateSeriesForSeminar'] != "series_exists"&&$_SESSION['resultCreateSeriesForSeminar'] != "new_series_created") :?>
 				<?= MessageBox::info(_("Sie haben noch keine Series aus Opencast mit dieser Veranstaltung verknüpft. Bitte erstellen Sie eine neue Series oder verknüpfen eine bereits vorhandene Series.")) ?>
@@ -219,7 +219,7 @@
 <? endif; ?>
 
 
-<? if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)) :?>
+<? if($GLOBALS['perm']->have_studip_perm('tutor', $course_id)) :?>
 
 <div id="upload_dialog" title="<?=_("Medienupload")?>">
 <?= $this->render_partial("course/_upload", array('course_id' => $course_id, 'dates' => $dates, 'series_id' => $this->connectedSeries[0]['identifier'])) ?>

@@ -91,7 +91,7 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         PageLayout::addScript($this->getPluginUrl() . '/javascripts/application.js');
 
 
-        if ($perm->have_perm('dozent') && OCModel::getConfigurationstate()) {
+        if ($perm->have_perm('tutor') && OCModel::getConfigurationstate()) {
             PageLayout::addScript($this->getPluginUrl() . '/javascripts/embed.js');
             PageLayout::addStylesheet($this->getpluginUrl() . '/stylesheets/embed.css');
             PageLayout::addScript($this->getpluginUrl() . '/vendor/jquery.ui.widget.js');
@@ -257,13 +257,13 @@ class OpenCast extends StudipPlugin implements SystemPlugin, StandardPlugin, Hom
         $main->addSubNavigation('overview', $overview);
 
 
-        if ($GLOBALS['perm']->have_studip_perm('dozent', $course_id) && get_config("OPENCAST_SCHEDULED_RECORDINGS")) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $course_id) && get_config("OPENCAST_SCHEDULED_RECORDINGS")) {
             $series_metadata = OCSeriesModel::getConnectedSeriesDB($course_id);
             if ($series_metadata[0]['schedule'] == '1') {
                 $main->addSubNavigation('scheduler', $scheduler);
             }
         }
-        if($ocmodel->getSeriesVisibility() == 'visible' || $GLOBALS['perm']->have_studip_perm('dozent', $course_id)){
+        if($ocmodel->getSeriesVisibility() == 'visible' || $GLOBALS['perm']->have_studip_perm('tutor', $course_id)){
             return array('opencast' => $main);
         } else return array();
 

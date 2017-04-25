@@ -90,7 +90,7 @@ class CourseController extends StudipController
         $reload = false;
         // set layout for index page
         $this->states = false;
-        if(!$GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)) {
+        if(!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
 
             $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
             $this->set_layout($layout);
@@ -136,7 +136,7 @@ class CourseController extends StudipController
                 if($occourse->getSeriesID()){
 
                     $ordered_episode_ids = $occourse->getEpisodes($reload);
-                    if(!$GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)) {
+                    if(!$GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)) {
                         $this->ordered_episode_ids = $occourse->refineEpisodesForStudents($ordered_episode_ids);
                     } else {
                         $this->ordered_episode_ids = $ordered_episode_ids;
@@ -342,7 +342,7 @@ class CourseController extends StudipController
     {
 
         $this->course_id = Request::get('cid');
-        if($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)){
+        if($GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)){
             $scheduler_client = SchedulerClient::getInstance();
             if($scheduler_client->scheduleEventForSeminar($this->course_id, $resource_id, $termin_id)) {
                 $this->flash['messages'] = array('success'=> _("Aufzeichnung wurde geplant."));
@@ -360,7 +360,7 @@ class CourseController extends StudipController
     {
 
         $this->course_id = Request::get('cid');
-        if($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)){
+        if($GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)){
             $scheduler_client = SchedulerClient::getInstance();
             if( $scheduler_client->deleteEventForSeminar($this->course_id, $resource_id, $termin_id)) {
                 $this->flash['messages'] = array('success'=> _("Die geplante Aufzeichnung wurde entfernt"));
@@ -380,7 +380,7 @@ class CourseController extends StudipController
     {
 
         $course_id = Request::get('cid');
-        if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)){
+        if($GLOBALS['perm']->have_studip_perm('tutor', $course_id)){
             $scheduler_client = SchedulerClient::getInstance();
             $scheduled = OCModel::checkScheduledRecording($course_id, $resource_id, $termin_id);
 
@@ -400,7 +400,7 @@ class CourseController extends StudipController
 
     function create_series_action()
     {
-        if($GLOBALS['perm']->have_studip_perm('dozent', $this->course_id)){
+        if($GLOBALS['perm']->have_studip_perm('tutor', $this->course_id)){
             $this->series_client = SeriesClient::getInstance();
             $resultCreateSeriesForSeminar = $this->series_client->createSeriesForSeminar($this->course_id);
             if($resultCreateSeriesForSeminar == "new_series_created") {
@@ -517,7 +517,7 @@ class CourseController extends StudipController
     {
         $course_id =  Request::get('cid');
         $action = Request::get('action');
-        if($GLOBALS['perm']->have_studip_perm('dozent', $course_id)){
+        if($GLOBALS['perm']->have_studip_perm('tutor', $course_id)){
             $dates = Request::getArray('dates');
             foreach($dates as $termin_id => $resource_id){
                 switch($action) {
@@ -626,7 +626,7 @@ class CourseController extends StudipController
                 //$embed = "https://". $embed;
             }
             */
-            $perm = $GLOBALS['perm']->have_studip_perm('dozent', $course_id);
+            $perm = $GLOBALS['perm']->have_studip_perm('tutor', $course_id);
 
 
             $episode = array('active_id' => $active_id,
@@ -649,7 +649,7 @@ class CourseController extends StudipController
 
     function refresh_episodes_action($ticket){
 
-        if(check_ticket($ticket) && $GLOBALS['perm']->have_studip_perm('dozent',$this->course_id)){
+        if(check_ticket($ticket) && $GLOBALS['perm']->have_studip_perm('tutor',$this->course_id)){
             $occourse2 = new OCCourseModel($this->course_id);
             $occourse2->getEpisodes(true);
             $this->flash['messages'] = array('success'=> _("Die Episodenliste wurde aktualisiert."));
@@ -659,7 +659,7 @@ class CourseController extends StudipController
     }
 
     function toggle_tab_visibility_action($ticket){
-        if(check_ticket($ticket) && $GLOBALS['perm']->have_studip_perm('dozent',$this->course_id)) {
+        if(check_ticket($ticket) && $GLOBALS['perm']->have_studip_perm('tutor',$this->course_id)) {
             $occourse = new OCCourseModel($this->course_id);
             $occourse->toggleSeriesVisibility();
             $visibility = $occourse->getSeriesVisibility();
@@ -672,7 +672,7 @@ class CourseController extends StudipController
 
     function setworkflow_action(){
 
-        if(check_ticket(Request::get('ticket')) && $GLOBALS['perm']->have_studip_perm('dozent',$this->course_id)){
+        if(check_ticket(Request::get('ticket')) && $GLOBALS['perm']->have_studip_perm('tutor',$this->course_id)){
 
             $occcourse = new OCCourseModel($this->course_id);
 
@@ -700,7 +700,7 @@ class CourseController extends StudipController
 
     function setworkflowforscheduledepisode_action($termin_id, $workflow_id, $resource_id){
 
-        if (Request::isXhr() && $GLOBALS['perm']->have_studip_perm('dozent',$this->course_id)) {
+        if (Request::isXhr() && $GLOBALS['perm']->have_studip_perm('tutor',$this->course_id)) {
             $occcourse = new OCCourseModel($this->course_id);
             $success =  $occcourse->setWorkflowForDate($termin_id, $workflow_id);
             self::updateschedule($resource_id, $termin_id, $this->course_id);

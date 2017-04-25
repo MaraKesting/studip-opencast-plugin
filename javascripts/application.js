@@ -265,9 +265,9 @@ OC = {
             jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/opencast/course/get_player/" +  episode_id + "/" +  cid).done(function(data) {
 
                 var episode = data.episode_data;
-                var dozent = data.perm;
+                var tutor = data.perm;
                 var player_template = jQuery('#playerTemplate').html();
-                var player = _.template(player_template,{episode:episode, theodul:data.theodul, embed:data.embed,dozent:dozent,engage_player_url:data.engage_player_url});
+                var player = _.template(player_template,{episode:episode, theodul:data.theodul, embed:data.embed,tutor:tutor,engage_player_url:data.engage_player_url});
 
                 jQuery('.oce_playercontainer').empty();
                 jQuery('.oce_playercontainer').html(player);
