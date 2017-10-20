@@ -124,12 +124,21 @@
             // Alle Serien aus der Opencast lesen
             $DBSeries = OCSeriesModel::getAllSeries();
 			// Namen der Veranstaltung aus der Stud.IP-Datenbank lesen 
-			$stmt = DBManager::get()->prepare("SELECT Name FROM `seminare` WHERE Seminar_id = ?");
+			$stmt = DBManager::get()->prepare("SELECT Name,start_time FROM `seminare` WHERE Seminar_id = ?");
             $res = $stmt->execute(array($course_id));
             $output = $stmt->fetch(PDO::FETCH_ASSOC);
             $name = utf8_encode($output['Name']);
+            // Semester der Veranstaltung ermitteln und an den Namen der Veranstaltung anhängen
+            $date = getdate($output['start_time'] );
+            if ($date['mon'] <= 3)
+                $sem = ' - WiSe' . substr(($date['year']-1), 2, 2) . '/' . substr(($date['year']), 2, 2);
+            else if ($date['mon'] >= 10)
+                $sem = ' - WiSe' . substr(($date['year']), 2, 2) . '/' . substr(($date['year']+1), 2, 2);
+            else
+                $sem = ' - SoSe' . $date['year'];
+            $name .= " " . $sem; 
      
-            // Prï¿½fen, ob der Name der Veranstaltung in Opencast vorhanden ist
+            // Prüfen, ob der Name der Veranstaltung in Opencast vorhanden ist
             $series_exists_boolean = false;
             foreach ($DBSeries as $key=>$value) {
 				$series_exists_boolean = (($DBSeries[$key]['title']!="" && $name!="" ? strpos($DBSeries[$key]['title'], $name)===0 : false) || $series_exists_boolean);
@@ -226,7 +235,7 @@
             $service_url = "/".$series_id;
             curl_setopt($this->ochandler,CURLOPT_URL,$this->matterhorn_base_url.$service_url);
             curl_setopt($this->ochandler, CURLOPT_CUSTOMREQUEST, "DELETE");
-            //TODO Ã¼ber REST Classe laufen lassen, getXML, getJSON...
+            //TODO über REST Classe laufen lassen, getXML, getJSON...
             $response = curl_exec($this->ochandler);
             $httpCode = curl_getinfo($this->ochandler, CURLINFO_HTTP_CODE);
             if($httpCode == 204){
